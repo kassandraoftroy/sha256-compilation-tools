@@ -1,0 +1,4 @@
+in bit4 a
+in bit4 b
+var bit4 c = Add4(a,b)
+out 4

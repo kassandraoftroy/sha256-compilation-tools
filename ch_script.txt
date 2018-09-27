@@ -1,0 +1,6 @@
+const bit32 x = 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+const bit not = 1
+in bit32 y
+in bit32 z
+var bit32 o = Ch(x,y,z,not)
+out o

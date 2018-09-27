@@ -1,0 +1,8 @@
+in bit256 block
+var bit32 a = block[0:32]
+var bit32 b = block[32:64]
+var bit32 a = bsig0(a)
+var bit32 b = bsig1(b)
+var bit32 c = block[68:100]
+var bit32 o = Maj(a,b,c)
+out o

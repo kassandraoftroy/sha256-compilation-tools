@@ -1,0 +1,8 @@
+const bit zero = 0
+in bit32 a
+in bit32 b
+in bit32 c
+var bit32 a = lsig0(a, zero)
+var bit32 b = lsig1(b, zero)
+var bit32 c = Maj(a,b,c)
+out c

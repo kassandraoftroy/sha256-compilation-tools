@@ -1,0 +1,12 @@
+const bit not = 1
+in bit256 block
+var bit32 a0 = block[224:256]
+var bit32 a1 = block[192:224]
+var bit32 d = block[100:132]
+loop(2)
+{
+    var bit32 c = block[*32]
+    var bit32 b = a*
+    var bit32 d = Ch(d,b,c,not)
+}
+out 32

@@ -1,0 +1,11 @@
+in bit32 a
+in bit32 b
+in bit32 c
+var bit32 d = Maj(a,b,c)
+loop(3)
+{
+	var bit32 a = bsig0(a)
+	var bit32 e = bsig0(d)
+	var bit32 d = Maj(a,d,e)
+}
+out d
