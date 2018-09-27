@@ -1,5 +1,5 @@
 const bit zero = 0
 in bit32 a
 in bit32 b
-var bit32 c = Add(a, b, zero)
+var bit32 c = Add(a, b)
 out c

@@ -17,7 +17,7 @@ types = {
         "length": 512
     },
     "BIT2048": {
-        "length":2048
+        "length": 2048
     },
     "BIT": {
         "length": 1
@@ -49,7 +49,8 @@ def compiler(filename, prime=2):
                 #assignment
                 if line[0][0] == "ASSIGN":
                     if not assign(line[1][0], line[2], line[4:]):
-                        return "ASSIGNEMNT ERROR LINE %s %s" % (line[0][2], repr(line))
+                        return "ASSIGNEMNT ERROR LINE %s %s" % (line[0][2],
+                                                                repr(line))
 
                 #loops - no nestled looping for now
                 if line[0][0] == "LOOP":
@@ -157,14 +158,19 @@ def loop(lines):
         for line in lines:
             if "STAR" in [j[0] for j in line]:
                 star_index = [j[0] for j in line].index("STAR")
-                if line[star_index-1][0] == "LBRACK":
-                    num = line[star_index+1][1]
-                    new_toks = getTokens(None, "%s:%s]"%(i*num, (i+1)*num))
-                    new_lines.append(line[:star_index]+new_toks)
-                elif line[star_index-1][0] == "ID" and line[star_index-2][0]=="EQUALS":
-                	length = types[id2var["%s%s"%(line[star_index-1][1], i)]["type"]]["length"]
-                	new_toks = getTokens(None, "%s%s[0:%s]"%(line[star_index-1][1], i, length))
-                	new_lines.append(line[:star_index-1]+new_toks)
+                if line[star_index - 1][0] == "LBRACK":
+                    num = line[star_index + 1][1]
+                    new_toks = getTokens(None, "%s:%s]" % (i * num,
+                                                           (i + 1) * num))
+                    new_lines.append(line[:star_index] + new_toks)
+                elif line[star_index - 1][0] == "ID" and line[
+                        star_index - 2][0] == "EQUALS":
+                    length = types[id2var["%s%s" % (line[star_index - 1][1],
+                                                    i)]["type"]]["length"]
+                    new_toks = getTokens(
+                        None,
+                        "%s%s[0:%s]" % (line[star_index - 1][1], i, length))
+                    new_lines.append(line[:star_index - 1] + new_toks)
 
             else:
                 new_lines.append(line)
@@ -186,10 +192,10 @@ def output(id_):
     if id_[0] != "ID":
         if id_[0] == "NUMBER":
             output_len = id_[1]
-            first_line = "%s %s %s %s\n" % (prime_order, input_len,
-                                            output_len, tape_len)
+            first_line = "%s %s %s %s\n" % (prime_order, input_len, output_len,
+                                            tape_len)
             text = first_line + text[:-1]
-            return True        
+            return True
         return False
     else:
         if id_[1] not in id2var.keys():
@@ -382,14 +388,12 @@ def functions(name, expr):
                     return False
 
             # First layer
-            addrs.append(tape_len)
             p_ = tape_len
             for i in range(32):
                 text += "%s %s %s ADD\n" % (addrs[0] + i, addrs[1] + i,
                                             tape_len)
                 tape_len += 1
 
-            addrs.append(tape_len)
             g_ = tape_len
             for i in range(32):
                 text += "%s %s %s MUL\n" % (addrs[0] + i, addrs[1] + i,
@@ -417,87 +421,23 @@ def functions(name, expr):
                 return result0, result2
 
             # PGPre (notation from SecureSCM)
-            addrs.append(tape_len)
             a = [[p_ + i, g_ + i] for i in range(32)]
 
             for i in range(1, 6):
                 for j in range(1, (32 / pow(2, i)) + 1):
                     y = pow(2, i - 1) + (j - 1) * pow(2, i)
-                    for z in range(1, 2**(i - 1)):
-                        a[y + z - 2] = PG(a[y - 1], a[y + z - 2])
-
-            # Now xor the carry bits with the original xor'ed result
-            for i in range(32):
-            	if i != 0:
-                    text += "%s %s %s ADD\n" % (p_ + i, a[i-1][1], tape_len)
-                else:
-                	text += "%s %s %s ADD\n" % (p_ + i, 0, tape_len)
-                tape_len += 1
-
-            return True
-
-    if name=="ADD4":
-        if expr[0][0] == "LPAREN" and expr[4][0] == "RPAREN":
-            ids = [expr[1][1], expr[3][1]]
-            addrs = []
-            for i in range(len(ids)):
-                if id2var[ids[i]]["type"] == "BIT4":
-                    addrs.append(id2var[ids[i]]["address"])
-                else:
-                    return False
-                    
-            addrs.append(tape_len)
-            p_ = tape_len
-            for i in range(4):
-                text += "%s %s %s ADD\n" % (addrs[0] + i, addrs[1] + i,
-                                            tape_len)
-                tape_len += 1
-
-            addrs.append(tape_len)
-            g_ = tape_len
-            for i in range(4):
-                text += "%s %s %s MUL\n" % (addrs[0] + i, addrs[1] + i,
-                                            tape_len)
-                tape_len += 1
-
-            def PG(in1, in2):
-                """
-                Takes as input two pointers to two pairs of bits
-                """
-                global tape_len, text
-
-                result0 = tape_len
-                text += "%s %s %s MUL\n" % (in1[0], in2[0], result0)
-                tape_len += 1
-
-                result1 = tape_len
-                text += "%s %s %s MUL\n" % (in1[1], in2[0], result1)
-                tape_len += 1
-
-                result2 = tape_len
-                text += "%s %s %s ADD\n" % (result1, in2[1], result2)
-                tape_len += 1
-
-                return result0, result2
-
-            # PGPre (notation from SecureSCM)
-            addrs.append(tape_len)
-            a = [[p_ + i, g_ + i] for i in range(4)]
-
-            for i in range(1, 3):
-                for j in range(1, (4 / pow(2, i)) + 1):
-                    y = pow(2, i - 1) + (j - 1) * pow(2, i)
-                    for z in range(1, 2**(i - 1)):
+                    for z in range(1, 2**(i - 1) + 1):
                         a[y + z - 1] = PG(a[y - 1], a[y + z - 1])
 
             # Now xor the carry bits with the original xor'ed result
-            for i in range(4):
+            for i in range(32):
                 if i != 0:
-                    text += "%s %s %s ADD\n" % (p_ + i, a[i-1][1], tape_len)
+                    text += "%s %s %s ADD\n" % (p_ + i, a[i - 1][1], tape_len)
                 else:
                     text += "%s %s %s ADD\n" % (p_ + i, 0, tape_len)
                 tape_len += 1
-        return True
+
+            return True
     return False
 
 
@@ -508,4 +448,3 @@ def reset(prime):
     id2var = {}
     text = ""
     prime_order = prime
-
