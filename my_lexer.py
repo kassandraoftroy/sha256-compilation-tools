@@ -20,10 +20,10 @@ reserved = {
   'bsig1':'BSIG1',
   'lsig0':'LSIG0',
   'lsig1':'LSIG1',
-  'Add4': 'ADD4',
+  'move': 'MOVE',
 }
 
-tokens = ['LBRACK', 'RBRACK', 'COLON', 'ID', 'EQUALS', 'LPAREN', 'RPAREN', 'INPUT', 'COMMA', 'OUTPUT', 'ASSIGN', 'LOOP', 'LBRACE', 'RBRACE', 'NUMBER', 'CONSTANT', 'MAJ', 'CH', 'BIT', 'BIT4', 'BIT32', 'BIT256', 'BIT512', 'BIT1024', 'BIT2048', 'BSIG0', 'BSIG1', 'LSIG0', 'LSIG1', 'ADD', 'ADD4', 'STAR']
+tokens = ['LBRACK', 'RBRACK', 'COLON', 'ID', 'EQUALS', 'LPAREN', 'RPAREN', 'INPUT', 'COMMA', 'OUTPUT', 'ASSIGN', 'LOOP', 'LBRACE', 'RBRACE', 'NUMBER', 'CONSTANT', 'MAJ', 'CH', 'BIT', 'BIT4', 'BIT32', 'BIT256', 'BIT512', 'BIT1024', 'BIT2048', 'BSIG0', 'BSIG1', 'LSIG0', 'LSIG1', 'ADD', 'MOVE', 'STAR']
 t_ignore = ' \t'
 t_EQUALS = r'='
 t_LPAREN  = r'\('

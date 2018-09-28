@@ -49,8 +49,7 @@ def compiler(filename, prime=2):
                 #assignment
                 if line[0][0] == "ASSIGN":
                     if not assign(line[1][0], line[2], line[4:]):
-                        return "ASSIGNEMNT ERROR LINE %s %s" % (line[0][2],
-                                                                repr(line))
+                        return "ASSIGNEMNT ERROR LINE %s %s" % (line[0][2], repr(line))
 
                 #loops - no nestled looping for now
                 if line[0][0] == "LOOP":
@@ -92,7 +91,7 @@ def constant(type_, name, expr):
     tape_len += types[type_]["length"]
     addr = id2var[name[1]]["address"]
     for i in range(len(vals)):
-        text = "%s %s %s\n" % ("C", addr + i, vals[i]) + text
+        text = text + "%s %s %s\n" % ("C", addr + i, vals[i])
     return True
 
 
@@ -389,13 +388,13 @@ def functions(name, expr):
 
             # First layer
             p_ = tape_len
-            for i in range(32):
+            for i in range(32)[::-1]:
                 text += "%s %s %s ADD\n" % (addrs[0] + i, addrs[1] + i,
                                             tape_len)
                 tape_len += 1
 
             g_ = tape_len
-            for i in range(32):
+            for i in range(32)[::-1]:
                 text += "%s %s %s MUL\n" % (addrs[0] + i, addrs[1] + i,
                                             tape_len)
                 tape_len += 1
@@ -430,13 +429,27 @@ def functions(name, expr):
                         a[y + z - 1] = PG(a[y - 1], a[y + z - 1])
 
             # Now xor the carry bits with the original xor'ed result
-            for i in range(32):
+            for i in range(32)[::-1]:
                 if i != 0:
                     text += "%s %s %s ADD\n" % (p_ + i, a[i - 1][1], tape_len)
                 else:
                     text += "%s %s %s ADD\n" % (p_ + i, 0, tape_len)
                 tape_len += 1
 
+            return True
+
+    if name=="MOVE":
+        if expr[0][0] == "LPAREN" and expr[2][0] == "RPAREN":
+            ids = [expr[1][1]]
+            addrs = []
+            for i in range(len(ids)):
+                if id2var[ids[i]]["type"] == "BIT32":
+                    addrs.append(id2var[ids[i]]["address"])
+                else:
+                    return False
+            for i in range(32):
+                text += "%s %s %s ADD\n" % (addrs[0]+i, 0, tape_len)
+                tape_len += 1
             return True
     return False
 
