@@ -451,6 +451,41 @@ def functions(name, expr):
                 text += "%s %s %s ADD\n" % (addrs[0]+i, 0, tape_len)
                 tape_len += 1
             return True
+
+    if name=="FIRSTBLOCK":
+        if expr[0][0] == "LPAREN" and expr[2][0] == "RPAREN":
+            ids = [expr[1][1]]
+            addrs = []
+            for i in range(len(ids)):
+                if id2var[ids[i]]["type"] == "BIT512":
+                    addrs.append(id2var[ids[i]]["address"])
+                else:
+                    return False
+            with open("mrgold_sha256_circuit.txt", "r") as f:
+                raw_text = f.read()
+            circuit = [i.split() for i in raw_text.split("\n")]
+            for gate in circuit:
+                if gate[-1] == "XOR" or gate[-1] == "AND":
+                    nums = [int(gate[-4]), int(gate[-3]), int(gate[-2])]
+                    for i in range(len(nums)):
+                        if nums[i] in range(512):
+                            nums[i] = addrs[0] + nums[i]
+                        else:
+                            nums[i] = nums[i] - 512 + tape_len
+                    if gate[-1] == "XOR":
+                        text += "%s %s %s ADD\n" % (nums[0], nums[1], nums[2])
+                    else:
+                        text += "%s %s %s MUL\n" % (nums[0], nums[1], nums[2])
+                if gate[-1] == "INV":
+                    nums = [int(gate[-3]), int(gate[-2])]
+                    for i in range(len(nums)):
+                        if nums[i] in range(512):
+                            nums[i] = addrs[0] + nums[i]
+                        else:
+                            nums[i] = nums[i] - 512 + tape_len
+                    text += "%s %s %s ADD\n" % (1, nums[0], nums[1])
+            tape_len += 116246
+            return True
     return False
 
 

@@ -33,13 +33,15 @@ class Circuit:
 		if len(tape) == self.n_inputs:
 			tape = self.constant_tape + tape
 			while len(tape)< self.tape_length:
-				tape.append(0)
+				tape.append(None)
 		if len(tape) != self.tape_length:
 			return "TAPE NOT PROPERLY FORMATTED"
 		for gate in self.circuit:
-			if gate[-1] == 'ADD':
+			if gate == []:
+				pass
+			elif gate[-1] == 'ADD':
 				tape[int(gate[-2])] = self.ADD(tape[int(gate[-3])], tape[int(gate[-4])])
-			if gate[-1] == 'MUL':
+			elif gate[-1] == 'MUL':
 				tape[int(gate[-2])] = self.MUL(tape[int(gate[-3])], tape[int(gate[-4])])
 		return tape[self.tape_length-self.n_outputs:]
 
