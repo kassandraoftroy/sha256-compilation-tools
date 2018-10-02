@@ -1,4 +1,3 @@
-
 def replace_boolean_consts(filename):
 	with open(filename, "r") as f:
 	    text = f.read()
@@ -24,48 +23,11 @@ def replace_boolean_consts(filename):
 	final = lines[:3]+out
 
 	t = "\n".join(final)
+	check_text = t.replace("\n", " Z ")
+	words = check_text.split()
+	vals = [str(i) for i in range(int(lines[0].split()[1])+2, int(lines[-1].split()[-2])+1)]
+	final_words = [str(int(word) - len(known_dict) + 2) if word in vals else word for word in words]
+	recombined = " ".join(final_words)
+	t = recombined.replace(" Z ", "\n")
 	with open("reduced_"+filename, "w") as f:
 		f.write(t)
-
-'''with open("better2block.txt", "r") as f:
-	text = f.read()
-
-text = text.replace("\n", "Z")
-lines = text.split("Z")
-ops = lines[3:]
-K = 0
-for i in range(len(ops)-256):
-	print K
-	v = ops[i].split()
-	if v[0] == "0" or v[1] == "0":
-		if v[3] == "ADD":
-			val = v[1] if v[0] == "0" else v[0]
-			new_text = " ".join([val if word==v[2] else word for word in text.split()])
-			new_lines = new_text.split("Z")
-			new_ops = new_lines[3:]
-			new_ops[i] = "SKIP"
-			text = "Z".join(lines[:3]+new_ops)
-			ops = new_ops
-		if v[3] == "MUL":
-			new_text = " ".join(["0" if word==v[2] else word for word in text.split()])
-			new_lines = new_text.split("Z")
-			new_ops = new_lines[3:]
-			new_ops[i] = "SKIP"
-			text = "Z".join(lines[:3]+new_ops)
-			ops = new_ops
-	if v[0] == "1" or v[1] == "1":
-		if v[3] == "MUL":
-			val = v[1] if v[0] == "1" else v[0]		
-			new_text = " ".join([val if word==v[2] else word for word in text.split()])
-			new_lines = new_text.split("Z")
-			new_ops = new_lines[3:]
-			new_ops[i] = "SKIP"
-			text = "Z".join(lines[:3]+new_ops)
-			ops = new_ops
-	K += 1
-
-final = lines[:3]+ops
-final = [f for f in final if f!="SKIP"]
-t = "\n".join(final)
-with open("check2block.txt", "w") as f:
-	f.write(t)'''

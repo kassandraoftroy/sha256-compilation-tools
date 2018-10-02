@@ -461,30 +461,23 @@ def functions(name, expr):
                     addrs.append(id2var[ids[i]]["address"])
                 else:
                     return False
-            with open("mrgold_sha256_circuit.txt", "r") as f:
+            with open("1blockSHA256.txt", "r") as f:
                 raw_text = f.read()
             circuit = [i.split() for i in raw_text.split("\n")]
             for gate in circuit:
-                if gate[-1] == "XOR" or gate[-1] == "AND":
+                if gate == []:
+                    pass
+                elif gate[-1] == "ADD" or gate[-1] == "MUL":
                     nums = [int(gate[-4]), int(gate[-3]), int(gate[-2])]
                     for i in range(len(nums)):
-                        if nums[i] in range(512):
-                            nums[i] = addrs[0] + nums[i]
+                        if nums[i] in [0,1]:
+                            nums[i] = nums[i]
+                        elif nums[i] in range(2,514):
+                            nums[i] = addrs[0] + nums[i] - 2
                         else:
-                            nums[i] = nums[i] - 512 + tape_len
-                    if gate[-1] == "XOR":
-                        text += "%s %s %s ADD\n" % (nums[0], nums[1], nums[2])
-                    else:
-                        text += "%s %s %s MUL\n" % (nums[0], nums[1], nums[2])
-                if gate[-1] == "INV":
-                    nums = [int(gate[-3]), int(gate[-2])]
-                    for i in range(len(nums)):
-                        if nums[i] in range(512):
-                            nums[i] = addrs[0] + nums[i]
-                        else:
-                            nums[i] = nums[i] - 512 + tape_len
-                    text += "%s %s %s ADD\n" % (1, nums[0], nums[1])
-            tape_len += 116246
+                            nums[i] = nums[i] - 514 + tape_len
+                    text += "%s %s %s %s\n" % (nums[0], nums[1], nums[2], gate[-1])
+            tape_len += 117016 - 514
             return True
     return False
 

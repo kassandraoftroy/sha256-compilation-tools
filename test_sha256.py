@@ -2,12 +2,13 @@ import hashlib
 from circuit_interpreter import Circuit
 from dumb_compiler import compiler
 
-'''text=compiler("shortcutSHA256_script.txt")
+# Uncomment to compile again (takes ~ 2minutes)
+'''text=compiler("2blockSHA256_better_script.txt")
 
-with open("2blockSHA256_2.txt", "w") as f:
+with open("2blockSHA256.txt", "w") as f:
     f.write(text)'''
 
-sha256_program = Circuit("2blockSHA256_better_2.txt")
+sha256_program = Circuit("2blockSHA256_2.txt")
 
 def test_sha256(string):
 	check = int(hashlib.sha256(string).hexdigest(), 16)

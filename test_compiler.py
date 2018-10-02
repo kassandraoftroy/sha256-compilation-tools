@@ -23,12 +23,12 @@ def run_tests():
 
 def test_add(x, y):
     # Compilation
-    text = compiler("add_script.txt")
-    with open("add.txt", "w") as f:
+    text = compiler("test_scripts/add_script.txt")
+    with open("test_scripts/add.txt", "w") as f:
         f.write(text)
 
     # Load compiled Maj circuit
-    add_program = Circuit("add.txt")
+    add_program = Circuit("test_scripts/add.txt")
 
     # Create inputs
     tape = [int(i) for i in int2bin32(x) + int2bin32(y)]
@@ -43,12 +43,12 @@ def test_add(x, y):
 
 def test_maj(x, y, z):
     # Compilation
-    text = compiler("maj_script.txt")
-    with open("maj.txt", "w") as f:
+    text = compiler("test_scripts/maj_script.txt")
+    with open("test_scripts/maj.txt", "w") as f:
         f.write(text)
 
     # Load compiled Maj circuit
-    maj_program = Circuit("maj.txt")
+    maj_program = Circuit("test_scripts/maj.txt")
 
     # Create inputs
     tape = [int(i) for i in int2bin32(x) + int2bin32(y) + int2bin32(z)]
@@ -63,12 +63,12 @@ def test_maj(x, y, z):
 def test_ch(y, z):
 
     # Compilation
-    text = compiler("ch_script.txt")
-    with open("ch.txt", "w") as f:
+    text = compiler("test_scripts/ch_script.txt")
+    with open("test_scripts/ch.txt", "w") as f:
         f.write(text)
 
     # Load compiled Loop Circuit
-    ch_program = Circuit("ch.txt")
+    ch_program = Circuit("test_scripts/ch.txt")
 
     # Create inputs
     tape = [int(i) for i in int2bin32(y) + int2bin32(z)]
@@ -83,12 +83,12 @@ def test_ch(y, z):
 
 def test_loop(x, y, z):
     # Compilation
-    text = compiler("loop_script.txt")
-    with open("loop.txt", "w") as f:
+    text = compiler("test_scripts/loop_script.txt")
+    with open("test_scripts/loop.txt", "w") as f:
         f.write(text)
 
     # Load compiled Loop Circuit
-    loop_program = Circuit("loop.txt")
+    loop_program = Circuit("test_scripts/loop.txt")
 
     # Create inputs
     tape = [int(i) for i in int2bin32(x) + int2bin32(y) + int2bin32(z)]
@@ -113,12 +113,12 @@ def check_loop_test(x, y, z):
 
 def test_bsig(a):
     # Compilation
-    text = compiler("bsig_script.txt")
-    with open("bsig.txt", "w") as f:
+    text = compiler("test_scripts/bsig_script.txt")
+    with open("test_scripts/bsig.txt", "w") as f:
         f.write(text)
 
     # Load compiled Loop Circuit
-    bsig_program = Circuit("bsig.txt")
+    bsig_program = Circuit("test_scripts/bsig.txt")
 
     # Create inputs
     tape = bin(a)[2:]
@@ -144,12 +144,12 @@ def check_bsig_test(l):
 
 
 def test_lsig(x, y, z):
-    text = compiler("lsig_script.txt")
-    with open("lsig.txt", "w") as f:
+    text = compiler("test_scripts/lsig_script.txt")
+    with open("test_scripts/lsig.txt", "w") as f:
         f.write(text)
 
     # Load compiled Loop Circuit
-    lsig_program = Circuit("lsig.txt")
+    lsig_program = Circuit("test_scripts/lsig.txt")
 
     # Create inputs
     tape = [int(i) for i in int2bin32(x) + int2bin32(y) + int2bin32(z)]
@@ -170,12 +170,12 @@ def check_lsig_test(a, b, c):
 
 def test_loop2(a):
     # Compilation
-    text = compiler("loop2_script.txt")
-    with open("loop2.txt", "w") as f:
+    text = compiler("test_scripts/loop2_script.txt")
+    with open("test_scripts/loop2.txt", "w") as f:
         f.write(text)
 
     # Load compiled Loop Circuit
-    loop2_program = Circuit("loop2.txt")
+    loop2_program = Circuit("test_scripts/loop2.txt")
 
     # Create inputs
     tape = bin(a)[2:]
